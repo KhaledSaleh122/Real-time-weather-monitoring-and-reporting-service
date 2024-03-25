@@ -35,6 +35,7 @@ namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
                 try
                 {
                     bool enabled = botConfig.GetProperty("enabled").GetBoolean();
+                    if (!enabled) continue;
                     double? newValue = null;
                     Threshold? threshold = null;
                     if (botConfig.TryGetProperty("temperatureThreshold", out var temperatureThresholdElement))
