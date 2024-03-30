@@ -16,9 +16,6 @@ namespace Real_time_weather_monitoring_and_reporting_service.UI
             Console.WriteLine("*   " + text + "   *");
             Console.WriteLine(decorationLine);
         }
-        public static void DisplayInputPrompt(String text) { 
-            Console.WriteLine(text);
-        }
 
         public static void DisplayWeatherDataFormatOptions() {
             Console.WriteLine("Select input data format: [Enter ~ to Cancel]");
@@ -32,6 +29,15 @@ namespace Real_time_weather_monitoring_and_reporting_service.UI
         public static void InvaildInput() {
             Console.WriteLine("Invaild input");
             CloseMessage();
+        }
+
+        public static Boolean NullInput(String input) {
+            if (String.IsNullOrWhiteSpace(input))
+            {
+                ConsoleMessage.InvaildInput();
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -20,20 +20,13 @@ namespace Real_time_weather_monitoring_and_reporting_service.UI
                     case "1" :
                         Console.WriteLine("Your JSON : ");
                         input = Console.ReadLine();
-                        if (String.IsNullOrWhiteSpace(input)) {
-                            ConsoleMessage.InvaildInput();
-                            return;
-                        }
+                        if (ConsoleMessage.NullInput(input) )return;
                         parser = new WeatherDataJSON();
                         break;
                     case "2" :
                         Console.WriteLine("Your XML : ");
                         input = Console.ReadLine();
-                        if (String.IsNullOrWhiteSpace(input))
-                        {
-                            ConsoleMessage.InvaildInput();
-                            return;
-                        }
+                        if (ConsoleMessage.NullInput(input)) return;
                         parser = new WeatherDataXML();
                         break;
                     default:

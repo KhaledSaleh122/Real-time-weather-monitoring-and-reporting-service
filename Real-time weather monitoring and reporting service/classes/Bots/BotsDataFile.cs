@@ -11,10 +11,23 @@ namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
 {
     public class BotsDataFile : IBotDataSource
     {
-        private readonly List<IBotListner> Bots = [];
+        private readonly List<IBotListner> _bots = [];
+        private readonly String _fileBath;
         public BotsDataFile(string filepath)
         {
-            string configFile = File.ReadAllText(filepath);
+            _fileBath = filepath;
+        }
+        public List<IBotListner> GetBots()
+        {
+            if (_bots.Count == 0) {
+                LoadBotsInFile();
+            }
+            return [.. _bots];
+        }
+
+        private void LoadBotsInFile()
+        {
+            string configFile = File.ReadAllText(_fileBath);
             JsonDocument configs;
             try
             {
@@ -25,8 +38,11 @@ namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
                 Console.WriteLine("Loading config file failed!!");
                 return;
             }
+            ReadBotsInFileJsonFormat(configs);
+        }
+        private void ReadBotsInFileJsonFormat(JsonDocument configs)
+        {
             JsonElement root = configs.RootElement;
-
             foreach (JsonProperty property in root.EnumerateObject())
             {
                 string botName = property.Name;
@@ -36,21 +52,9 @@ namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
                 {
                     bool enabled = botConfig.GetProperty("enabled").GetBoolean();
                     if (!enabled) continue;
-                    double? newValue = null;
-                    Threshold? threshold = null;
-                    if (botConfig.TryGetProperty("temperatureThreshold", out var temperatureThresholdElement))
-                    {
-                        newValue = temperatureThresholdElement.GetDouble();
-                        threshold = Threshold.temperature;
-                    }
-                    if (botConfig.TryGetProperty("humidityThreshold", out var humidityThresholdElement))
-                    {
-                        newValue = humidityThresholdElement.GetDouble();
-                        threshold = Threshold.humidity;
-                    }
+                    (double? newValue, Threshold? threshold) = UpdatedThreshold(botConfig);
                     string message = botConfig.GetProperty("message").GetString()!;
-                    if (newValue is null) continue;
-                    Bots.Add(BotsFactory.CreateBot(botName, (Threshold)threshold!, (double)newValue, message));
+                    _bots.Add(BotsFactory.CreateBot(botName, (Threshold)threshold!, (double)newValue!, message));
                 }
                 catch
                 {
@@ -59,9 +63,17 @@ namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
             }
         }
 
-        public List<IBotListner> GetBots()
+        private static (double?, Threshold) UpdatedThreshold(JsonElement botConfig)
         {
-            return [.. Bots];
+            if (botConfig.TryGetProperty("temperatureThreshold", out var temperatureThresholdElement))
+            {
+                return (temperatureThresholdElement.GetDouble(), Threshold.temperature);
+            }
+            if (botConfig.TryGetProperty("humidityThreshold", out var humidityThresholdElement))
+            {
+                return (humidityThresholdElement.GetDouble(), Threshold.humidity);
+            }
+            throw new Exception("Invaild bot threshold data");
         }
     }
 }

@@ -13,5 +13,10 @@
     "enabled": true,
     "temperatureThreshold": 0,
     "message": "Brrr, it's getting chilly!"
+  },
+  "TestBot": {
+    "enabled": true,
+    "temperatureThreshold": 0,
+    "message": "Test"
   }
 }

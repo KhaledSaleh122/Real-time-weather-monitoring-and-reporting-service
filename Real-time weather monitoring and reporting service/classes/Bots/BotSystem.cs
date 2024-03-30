@@ -5,12 +5,8 @@ namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
     public class BotSystem
     {
         private readonly List<IBotListner> botListners = [];
-        public BotSystem(IBotDataSource source)
+        public BotSystem()
         {
-            foreach (var item in source.GetBots())
-            {
-                Subscribe(item);
-            }
         }
         public void Subscribe(IBotListner botListner)
         {
