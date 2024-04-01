@@ -9,13 +9,15 @@ namespace Real_time_weather_monitoring_and_reporting_service.UI
     public class WeatherUI : IWeatherUI
     {
         private IMessageViewer _messageViewer;
-        public WeatherUI(IMessageViewer messageViewer)
+        private IBotSystem _botSystem;
+        public WeatherUI(IMessageViewer messageViewer, IBotSystem botSystem)
         {
             _messageViewer = messageViewer;
+            _botSystem = botSystem;
         }
-        public void CollectWeatherData(IBotSystem botSystem)
+        public void CollectWeatherData()
         {
-            WeatherDataParser parserType = default;
+            WeatherDataParserType parserType = default;
             String? input;
             do
             {
@@ -29,13 +31,13 @@ namespace Real_time_weather_monitoring_and_reporting_service.UI
                         Console.WriteLine("Your JSON : ");
                         input = Console.ReadLine();
                         if (_messageViewer.IsNullInput(input)) return;
-                        parserType = WeatherDataParser.JSON;
+                        parserType = WeatherDataParserType.JSON;
                         break;
                     case "2":
                         Console.WriteLine("Your XML : ");
                         input = Console.ReadLine();
                         if (_messageViewer.IsNullInput(input)) return;
-                        parserType = WeatherDataParser.XML;
+                        parserType = WeatherDataParserType.XML;
                         break;
                     default:
                         _messageViewer.InvaildInput();
@@ -43,12 +45,12 @@ namespace Real_time_weather_monitoring_and_reporting_service.UI
 
                 }
             } while (parserType == default);
-            IWeatherDataProvider weatherDataProvider = new WeatherDataProvider(parserType);
+            IWeatherDataProvider weatherDataProvider = new WeatherDataProvider(new StanderWeatherDataParserFactory(), parserType);
             IWeatherDataModel weatherData;
             try
             {
                 weatherData = weatherDataProvider.GetWeatherData(input!);
-                botSystem.Notify(weatherData);
+                _botSystem.Notify(weatherData);
             }
             catch
             {

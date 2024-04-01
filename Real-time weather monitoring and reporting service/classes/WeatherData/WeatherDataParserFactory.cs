@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Real_time_weather_monitoring_and_reporting_service.classes.WeatherData
 {
-    internal abstract class WeatherDataParserFactory
+    public abstract class WeatherDataParserFactory
     {
-        public abstract IWeatherDataParser CreateParser(WeatherDataParser weatherDataParser);
-        public IWeatherDataParser GetParser(WeatherDataParser weatherDataParser)
+        public abstract IWeatherDataParser CreateParser(WeatherDataParserType weatherDataParser);
+        public IWeatherDataParser GetParser(WeatherDataParserType weatherDataParser)
         {
             IWeatherDataParser parser = CreateParser(weatherDataParser);
             return parser;

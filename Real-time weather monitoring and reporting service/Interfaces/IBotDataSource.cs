@@ -3,5 +3,6 @@
     public interface IBotDataSource
     {
         List<IBotListner> GetBots();
+        void LoadBots();
     }
 }

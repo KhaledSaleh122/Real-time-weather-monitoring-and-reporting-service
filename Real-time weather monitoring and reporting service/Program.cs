@@ -4,14 +4,11 @@ using Real_time_weather_monitoring_and_reporting_service.classes.bots;
 using Real_time_weather_monitoring_and_reporting_service.classes.Logger;
 using Real_time_weather_monitoring_and_reporting_service.Interfaces;
 using Real_time_weather_monitoring_and_reporting_service.UI;
-IBotDataSource botDataSource = new BotsDataFile("./Config/Botconfig.json");
 IBotSystem botSystem = new BotSystem();
-foreach (var item in botDataSource.GetBots())
-{
-    botSystem.Subscribe(item);
-}
+IBotDataSource botDataSource = new BotsDataFile("./Config/Botconfig.json", new StanderBotsFactory(), botSystem);
+botDataSource.LoadBots();
 IMessageViewer messageViewer = new WeatherMessageViewer();
-IWeatherUI weatherUI = new WeatherUI(messageViewer);
+IWeatherUI weatherUI = new WeatherUI(messageViewer, botSystem);
 
-weatherUI.CollectWeatherData(botSystem);
+weatherUI.CollectWeatherData();
 

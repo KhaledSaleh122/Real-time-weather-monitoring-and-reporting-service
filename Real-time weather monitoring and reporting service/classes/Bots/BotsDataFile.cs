@@ -15,19 +15,32 @@ namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
     {
         private readonly List<IBotListner> _bots = [];
         private readonly String _fileBath;
-        public BotsDataFile(string filepath)
+        private readonly BotFactory _botFactory;
+        private readonly IBotSystem _botSystem;
+        public BotsDataFile(string filepath, BotFactory botFactory, IBotSystem botSystem)
         {
             _fileBath = filepath;
+            _botFactory = botFactory;
+            _botSystem = botSystem;
         }
         public List<IBotListner> GetBots()
         {
             if (_bots.Count == 0)
             {
-                LoadBotsInFile();
+                LoadBots();
             }
             return [.. _bots];
         }
 
+        public void LoadBots()
+        {
+            if (_bots.Count != 0) throw new Exception("File Already Loaded");
+            LoadBotsInFile();
+            foreach (var bot in _bots)
+            {
+                _botSystem.Subscribe(bot);
+            }
+        }
         private void LoadBotsInFile()
         {
             string configFile = File.ReadAllText(_fileBath);
@@ -66,8 +79,7 @@ namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
                         humidity = humidityThresholdElement.GetDouble();
                     }
                     string message = botConfig.GetProperty("message").GetString()!;
-                    BotFactory botFactory = new StanderBotsFactory();
-                    _bots.Add(botFactory.CreateBot(botName, temperature, humidity, message));
+                    _bots.Add(_botFactory.CreateBot(botName, temperature, humidity, message));
                 }
                 catch
                 {

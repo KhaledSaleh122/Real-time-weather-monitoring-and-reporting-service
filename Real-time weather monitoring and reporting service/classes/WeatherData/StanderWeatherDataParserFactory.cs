@@ -10,13 +10,13 @@ namespace Real_time_weather_monitoring_and_reporting_service.classes.WeatherData
 {
     internal class StanderWeatherDataParserFactory : WeatherDataParserFactory
     {
-        public override IWeatherDataParser CreateParser(WeatherDataParser weatherDataParser)
+        public override IWeatherDataParser CreateParser(WeatherDataParserType weatherDataParser)
         {
-            if (weatherDataParser == WeatherDataParser.JSON)
+            if (weatherDataParser == WeatherDataParserType.JSON)
             {
                 return new JsonWeatherDataParser();
             }
-            else if (weatherDataParser == WeatherDataParser.XML)
+            else if (weatherDataParser == WeatherDataParserType.XML)
             {
                 return new XmlWeatherDataParser();
             }

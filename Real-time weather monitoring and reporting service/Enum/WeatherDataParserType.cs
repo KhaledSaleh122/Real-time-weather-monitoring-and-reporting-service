@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Real_time_weather_monitoring_and_reporting_service.Enum
 {
-    public enum WeatherDataParser
+    public enum WeatherDataParserType
     {
         None,
         XML,
