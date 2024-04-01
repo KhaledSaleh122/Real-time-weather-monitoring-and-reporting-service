@@ -43,9 +43,7 @@ namespace Real_time_weather_monitoring_and_reporting_service.UI
 
                 }
             } while (parserType == default);
-            WeatherDataParserFactory parserFactory = new StanderWeatherDataParserFactory();
-            IWeatherDataParser weatherDataParser = parserFactory.CreateParser(parserType);
-            IWeatherDataProvider weatherDataProvider = new WeatherDataProvider(weatherDataParser);
+            IWeatherDataProvider weatherDataProvider = new WeatherDataProvider(parserType);
             IWeatherDataModel weatherData;
             try
             {
