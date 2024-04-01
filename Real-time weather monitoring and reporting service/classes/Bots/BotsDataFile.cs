@@ -1,4 +1,6 @@
-﻿using Real_time_weather_monitoring_and_reporting_service.Interfaces;
+﻿using Real_time_weather_monitoring_and_reporting_service.classes.Bots;
+using Real_time_weather_monitoring_and_reporting_service.Enum;
+using Real_time_weather_monitoring_and_reporting_service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +21,8 @@ namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
         }
         public List<IBotListner> GetBots()
         {
-            if (_bots.Count == 0) {
+            if (_bots.Count == 0)
+            {
                 LoadBotsInFile();
             }
             return [.. _bots];
@@ -52,28 +55,25 @@ namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
                 {
                     bool enabled = botConfig.GetProperty("enabled").GetBoolean();
                     if (!enabled) continue;
-                    (double? newValue, Threshold? threshold) = UpdatedThreshold(botConfig);
+                    double temperature = default;
+                    if (botConfig.TryGetProperty("temperatureThreshold", out var temperatureThresholdElement))
+                    {
+                        temperature = temperatureThresholdElement.GetDouble();
+                    }
+                    double humidity = default;
+                    if (botConfig.TryGetProperty("humidityThreshold", out var humidityThresholdElement))
+                    {
+                        humidity = humidityThresholdElement.GetDouble();
+                    }
                     string message = botConfig.GetProperty("message").GetString()!;
-                    _bots.Add(BotsFactory.CreateBot(botName, (Threshold)threshold!, (double)newValue!, message));
+                    BotFactory botFactory = new StanderBotsFactory();
+                    _bots.Add(botFactory.CreateBot(botName, temperature, humidity, message));
                 }
                 catch
                 {
                     continue;
                 }
             }
-        }
-
-        private static (double?, Threshold) UpdatedThreshold(JsonElement botConfig)
-        {
-            if (botConfig.TryGetProperty("temperatureThreshold", out var temperatureThresholdElement))
-            {
-                return (temperatureThresholdElement.GetDouble(), Threshold.temperature);
-            }
-            if (botConfig.TryGetProperty("humidityThreshold", out var humidityThresholdElement))
-            {
-                return (humidityThresholdElement.GetDouble(), Threshold.humidity);
-            }
-            throw new Exception("Invaild bot threshold data");
         }
     }
 }

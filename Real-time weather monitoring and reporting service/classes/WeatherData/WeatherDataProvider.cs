@@ -8,14 +8,14 @@ using Real_time_weather_monitoring_and_reporting_service.Model;
 
 namespace Real_time_weather_monitoring_and_reporting_service.classes.WeatherData
 {
-    public class WeatherDataProvider
+    public class WeatherDataProvider : IWeatherDataProvider
     {
         private readonly IWeatherDataParser _parser;
         public WeatherDataProvider(IWeatherDataParser parser)
         {
             _parser = parser;
         }
-        public WeatherDataModel GetWeatherData(string data)
+        public IWeatherDataModel GetWeatherData(string data)
         {
             if (_parser.TryParse(data, out var weatherData))
             {

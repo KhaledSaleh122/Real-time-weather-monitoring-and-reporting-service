@@ -9,6 +9,6 @@ namespace Real_time_weather_monitoring_and_reporting_service.Interfaces
 {
     public interface IWeatherDataParser
     {
-        bool TryParse(string text, out WeatherDataModel? weatherData);
+        bool TryParse(string text, out IWeatherDataModel? weatherData);
     }
 }

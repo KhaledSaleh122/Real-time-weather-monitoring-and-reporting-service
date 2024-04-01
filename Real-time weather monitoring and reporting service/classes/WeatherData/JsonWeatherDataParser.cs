@@ -9,9 +9,9 @@ using Real_time_weather_monitoring_and_reporting_service.Model;
 
 namespace Real_time_weather_monitoring_and_reporting_service.classes.WeatherData
 {
-    public class WeatherDataJSON : IWeatherDataParser
+    public class JsonWeatherDataParser : IWeatherDataParser
     {
-        public bool TryParse(string text, out WeatherDataModel? weatherData)
+        public bool TryParse(string text, out IWeatherDataModel? weatherData)
         {
             try
             {

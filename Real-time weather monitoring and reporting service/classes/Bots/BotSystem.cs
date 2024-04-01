@@ -1,8 +1,9 @@
-﻿using Real_time_weather_monitoring_and_reporting_service.Interfaces;
+﻿using Real_time_weather_monitoring_and_reporting_service.Enum;
+using Real_time_weather_monitoring_and_reporting_service.Interfaces;
 
 namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
 {
-    public class BotSystem
+    public class BotSystem : IBotSystem
     {
         private readonly List<IBotListner> botListners = [];
         public BotSystem()
@@ -13,9 +14,9 @@ namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
             botListners.Add(botListner);
         }
 
-        public void Notify(double temperature, double humidity)
+        public void Notify(IWeatherDataModel weatherData)
         {
-            botListners.ForEach((bot) => bot.Update(bot.Threshold == Threshold.humidity ? humidity : temperature));
+            botListners.ForEach((bot) => bot.Update(weatherData.Temperature, weatherData.Humidity));
         }
     }
 }

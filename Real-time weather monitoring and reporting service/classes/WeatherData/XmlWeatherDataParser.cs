@@ -6,9 +6,9 @@ using System.Xml.Linq;
 
 namespace Real_time_weather_monitoring_and_reporting_service.classes.WeatherData
 {
-    internal class WeatherDataXML : IWeatherDataParser
+    internal class XmlWeatherDataParser : IWeatherDataParser
     {
-        public bool TryParse(string text, out WeatherDataModel? weatherData)
+        public bool TryParse(string text, out IWeatherDataModel? weatherData)
         {
             weatherData = null;
             try
@@ -30,7 +30,7 @@ namespace Real_time_weather_monitoring_and_reporting_service.classes.WeatherData
             }
         }
 
-        public static bool ValidateXMLData(XDocument xdoc)
+        private static bool ValidateXMLData(XDocument xdoc)
         {
             var xLoaction = xdoc.Element("WeatherData")?.Element("Location")?.Value;
             var xTemperature = xdoc.Element("WeatherData")?.Element("Temperature")?.Value;

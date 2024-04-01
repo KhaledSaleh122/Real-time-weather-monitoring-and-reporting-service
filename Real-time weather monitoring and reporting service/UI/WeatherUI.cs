@@ -1,49 +1,60 @@
 ﻿using Real_time_weather_monitoring_and_reporting_service.classes.bots;
 using Real_time_weather_monitoring_and_reporting_service.classes.WeatherData;
+using Real_time_weather_monitoring_and_reporting_service.Enum;
 using Real_time_weather_monitoring_and_reporting_service.Interfaces;
 using Real_time_weather_monitoring_and_reporting_service.Model;
 
 namespace Real_time_weather_monitoring_and_reporting_service.UI
 {
-    public static class WeatherUI
+    public class WeatherUI : IWeatherUI
     {
-        public static void CollectWeatherData(BotSystem botSystem) {
-            IWeatherDataParser? parser = null;
+        private IMessageViewer _messageViewer;
+        public WeatherUI(IMessageViewer messageViewer)
+        {
+            _messageViewer = messageViewer;
+        }
+        public void CollectWeatherData(IBotSystem botSystem)
+        {
+            WeatherDataParser parserType = default;
             String? input;
-            do {
-                ConsoleMessage.DisplayHeaderMessage("Weather Data");
-                ConsoleMessage.DisplayWeatherDataFormatOptions();
+            do
+            {
+                _messageViewer.DisplayHeaderMessage("Weather Data");
+                _messageViewer.DisplayOptions();
                 input = Console.ReadLine();
                 switch (input)
                 {
                     case "~": return;
-                    case "1" :
+                    case "1":
                         Console.WriteLine("Your JSON : ");
                         input = Console.ReadLine();
-                        if (ConsoleMessage.NullInput(input) )return;
-                        parser = new WeatherDataJSON();
+                        if (_messageViewer.IsNullInput(input)) return;
+                        parserType = WeatherDataParser.JSON;
                         break;
-                    case "2" :
+                    case "2":
                         Console.WriteLine("Your XML : ");
                         input = Console.ReadLine();
-                        if (ConsoleMessage.NullInput(input)) return;
-                        parser = new WeatherDataXML();
+                        if (_messageViewer.IsNullInput(input)) return;
+                        parserType = WeatherDataParser.XML;
                         break;
                     default:
-                        ConsoleMessage.InvaildInput();
+                        _messageViewer.InvaildInput();
                         break;
 
                 }
-            } while (parser is null);
-            var weatherDataFactory = new WeatherDataProvider(parser);
-            WeatherDataModel weatherData;
+            } while (parserType == default);
+            WeatherDataParserFactory parserFactory = new StanderWeatherDataParserFactory();
+            IWeatherDataParser weatherDataParser = parserFactory.CreateParser(parserType);
+            IWeatherDataProvider weatherDataProvider = new WeatherDataProvider(weatherDataParser);
+            IWeatherDataModel weatherData;
             try
             {
-                weatherData = weatherDataFactory.GetWeatherData(input!);
-                botSystem.Notify(weatherData.Temperature, weatherData.Humidity);
+                weatherData = weatherDataProvider.GetWeatherData(input!);
+                botSystem.Notify(weatherData);
             }
-            catch { 
-                ConsoleMessage.InvaildInput();
+            catch
+            {
+                _messageViewer.InvaildInput();
                 return;
             }
         }

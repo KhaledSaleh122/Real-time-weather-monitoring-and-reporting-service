@@ -1,27 +1,30 @@
-﻿using Real_time_weather_monitoring_and_reporting_service.Interfaces;
+﻿using Real_time_weather_monitoring_and_reporting_service.classes.Logger;
+using Real_time_weather_monitoring_and_reporting_service.Enum;
+using Real_time_weather_monitoring_and_reporting_service.Interfaces;
 
 
 namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
 {
     public class SnowBot : IBotListner
     {
-        public Threshold Threshold { get; set; }
-        public double ThresholdValue { get; set; }
+        private readonly ILogger _logger;
         public string Message { get; set; }
-
-        public SnowBot(Threshold threshold, double thresholdValue, string message)
+        public double HumidityThreshold { get; set; }
+        public double TemperatureThreshold { get; set; }
+        public SnowBot(double temperatureThreshold, string message, ILogger logger)
         {
-            Threshold = threshold;
-            ThresholdValue = thresholdValue;
             Message = message;
+            TemperatureThreshold = temperatureThreshold;
+            _logger = logger;
         }
 
-        public void Update(double newValue)
+
+        public void Update(double temperature, double humidity)
         {
-            if (newValue < ThresholdValue)
+            if (temperature < TemperatureThreshold)
             {
-                Console.WriteLine("SnowBot activated!");
-                Console.WriteLine($"SnowBot: {Message}");
+                _logger.Log("SnowBot activated!");
+                _logger.Log($"SnowBot: {Message}");
             }
         }
     }
