@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Real_time_weather_monitoring_and_reporting_service.classes.WeatherData
 {
-    internal class StanderWeatherDataParserFactory : WeatherDataParserFactory
+    public class StanderWeatherDataParserFactory : WeatherDataParserFactory
     {
         public override IWeatherDataParser CreateParser(WeatherDataParserType weatherDataParser)
         {

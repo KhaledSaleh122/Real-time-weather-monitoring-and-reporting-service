@@ -5,7 +5,7 @@ using Real_time_weather_monitoring_and_reporting_service.Interfaces;
 
 namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
 {
-    internal class RainBot : IBotListner
+    public class RainBot : IBotListner
     {
         private readonly ILogger _logger;
         public string Message { get; set; }

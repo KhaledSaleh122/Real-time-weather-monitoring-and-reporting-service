@@ -9,6 +9,10 @@ namespace Real_time_weather_monitoring_and_reporting_service.classes.bots
         public BotSystem()
         {
         }
+        public List<IBotListner> GetBotListners()
+        {
+            return [.. botListners];
+        }
         public void Subscribe(IBotListner botListner)
         {
             botListners.Add(botListner);

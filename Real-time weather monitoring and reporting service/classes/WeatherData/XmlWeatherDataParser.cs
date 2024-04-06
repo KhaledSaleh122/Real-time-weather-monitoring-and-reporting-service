@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace Real_time_weather_monitoring_and_reporting_service.classes.WeatherData
 {
-    internal class XmlWeatherDataParser : IWeatherDataParser
+    public class XmlWeatherDataParser : IWeatherDataParser
     {
         public bool TryParse(string text, out IWeatherDataModel? weatherData)
         {
